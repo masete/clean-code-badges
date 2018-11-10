@@ -3,7 +3,6 @@ from api.models.models import Parcel, parcel_orders
 from api.validations import empty_order_fields, invalid_input_types, empty_strings_add_weight
 from api.Handlers.error_handlers import InvalidUsage
 
-
 parcel_blueprint = Blueprint("parcel", __name__)
 
 
@@ -17,6 +16,7 @@ def create_parcel():
     parcel_destination = data.get('parcel_destination')
     parcel_weight = data.get('parcel_weight')
     parcel_description = data.get('parcel_description')
+    user_id = data.get('user_id')
     status = data.get('status')
 
     val = empty_order_fields(parcel_location, parcel_destination, parcel_weight, parcel_description, status)
@@ -29,9 +29,9 @@ def create_parcel():
     if empty_strings:
         raise InvalidUsage(empty_strings, 400)
 
-    order = Parcel(parcel_id, parcel_location, parcel_destination, parcel_weight, parcel_description, status)
+    order = Parcel(parcel_id, parcel_location, parcel_destination, parcel_weight, parcel_description, user_id, status)
     parcel_orders.append(order.to_dict())
-    return jsonify({"message": "parcel successfully added"}), 201
+    return jsonify({"message": "parcel successfully added", "data": order.to_dict()}), 201
 
 
 @parcel_blueprint.route('/api/v1/parcel', methods=['GET'])
@@ -60,9 +60,16 @@ def cancel_parcel(parcel_id):
     return jsonify({"message": "there is no such id"}), 400
 
 
-@parcel_blueprint.route('/api/v1/users/user_id/parcel', methods=['PUT'])
+@parcel_blueprint.route('/api/v1/users/<int:user_id>/parcel', methods=['GET'])
 def get_parcel_by_user_id(user_id):
-    pass
+    single = []
+    for order in parcel_orders:
+        if order['user_id'] == user_id:
+            single.append(order)
+
+    if len(single) > 0:
+        return jsonify(single), 200
+    return jsonify({"message": "there is no such id"}), 400
 
 
 @parcel_blueprint.errorhandler(InvalidUsage)
