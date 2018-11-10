@@ -1,0 +1,15 @@
+/.idea
+/ourenv
+/tests/.pytest_cache
+/run.pyc
+/tests/__init__.pyc
+/tests/__pycache__
+/api/__pycache__
+/api/validations.pyc
+/api/models/models.pyc
+/api/models/__pycache__/
+/api/models/__init__.pyc
+/api/__init__.pyc
+/api/Handlers/error_handlers.pyc
+/api/Handlers/__pycache__/
+/api/Handlers/__init__.pyc

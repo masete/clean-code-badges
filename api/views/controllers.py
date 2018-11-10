@@ -32,3 +32,10 @@ def create_parcel():
     order = Parcel(parcel_id, parcel_location, parcel_destination, parcel_weight, parcel_description, status)
     parcel_orders.append(order.to_dict())
     return jsonify({"message": "parcel successfully added"}), 201
+
+
+@parcel_blueprint.route('/api/v1/parcel', methods=['GET'])
+def get_all_parcel():
+    if not parcel_orders:
+        return jsonify({"message": "List is empty first post"})
+    return jsonify({"orders": parcel_orders})
