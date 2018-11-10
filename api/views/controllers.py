@@ -39,3 +39,14 @@ def get_all_parcel():
     if not parcel_orders:
         return jsonify({"message": "List is empty first post"})
     return jsonify({"orders": parcel_orders})
+
+
+@parcel_blueprint.route('/api/v1/parcel/<int:parcel_id>', methods=['GET'])
+def get_single_parcel(parcel_id):
+    single = []
+    for order in parcel_orders:
+        if order['parcel_id'] == parcel_id:
+            single.append(order)
+            return jsonify(single), 200
+        return jsonify({"message": "there is no such id"}), 400
+
