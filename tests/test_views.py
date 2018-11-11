@@ -76,6 +76,54 @@ class TestEndpoints(unittest.TestCase):
         assert response.headers["Content-Type"] == "application/json"
         assert "user_id cant be less than 0" in json.loads(response.data)['error']['user_id']
 
+    def test_invalid_parcel_location_field_inputs(self):
+        post_order = dict(parcel_location=674, parcel_destination="mbale", parcel_weight=78,
+                          parcel_description="apples", user_id=-1, status="pending")
+        response = self.app.post('/api/v1/parcel', json=post_order)
+        assert response.status_code == 400
+        assert response.headers["Content-Type"] == "application/json"
+        assert "should be a string" == json.loads(response.data)['error']['parcel_location']
+
+    def test_invalid_parcel_destination_field_inputs(self):
+        post_order = dict(parcel_location="naalya", parcel_destination=89, parcel_weight=78,
+                          parcel_description="apples", user_id=1, status="pending")
+        response = self.app.post('/api/v1/parcel', json=post_order)
+        assert response.status_code == 400
+        assert response.headers["Content-Type"] == "application/json"
+        assert "should be a string" == json.loads(response.data)['error']['parcel_destination']
+
+    def test_invalid_status_field_inputs(self):
+        post_order = dict(parcel_location="naalya", parcel_destination="egypt", parcel_weight=78,
+                          parcel_description="apples", user_id=1, status=89)
+        response = self.app.post('/api/v1/parcel', json=post_order)
+        assert response.status_code == 400
+        assert response.headers["Content-Type"] == "application/json"
+        assert "status should be a string" == json.loads(response.data)['error']['status']
+
+    def test_user_id_field_inputs(self):
+        post_order = dict(parcel_location="naalya", parcel_destination="egypt", parcel_weight=78,
+                          parcel_description="apples", user_id="nine", status=89)
+        response = self.app.post('/api/v1/parcel', json=post_order)
+        assert response.status_code == 400
+        assert response.headers["Content-Type"] == "application/json"
+        assert "user_id should be an integar" == json.loads(response.data)['error']['user_id']
+
+    def test_invalid_parcel_weight_field_inputs(self):
+        post_order = dict(parcel_location="naalya", parcel_destination="moroto", parcel_weight="five",
+                          parcel_description="apples", user_id=1, status="pending")
+        response = self.app.post('/api/v1/parcel', json=post_order)
+        assert response.status_code == 400
+        assert response.headers["Content-Type"] == "application/json"
+        assert "should be an integar" == json.loads(response.data)['error']['parcel_weight']
+
+    def test_invalid_parcel_description_field_inputs(self):
+        post_order = dict(parcel_location="naalya", parcel_destination="moroto", parcel_weight=6,
+                          parcel_description=-40, user_id=1, status="pending")
+        response = self.app.post('/api/v1/parcel', json=post_order)
+        assert response.status_code == 400
+        assert response.headers["Content-Type"] == "application/json"
+        assert "should be a string" == json.loads(response.data)['error']['parcel_description']
+
     def test_get_all_parcels(self):
         post_order = dict(parcel_location="jinja", parcel_destination="manafwa", parcel_weight=24.7,
                           parcel_description="apples", user_id=1, status="pending")

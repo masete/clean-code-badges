@@ -25,7 +25,7 @@ def invalid_input_types(parcel_location, parcel_destination, parcel_weight, parc
     if not isinstance(parcel_weight, int):
         error['parcel_weight'] = 'should be an integar'
     if not isinstance(parcel_description, str):
-        error['parcel_location'] = 'should be a string'
+        error['parcel_description'] = 'should be a string'
     if not isinstance(user_id, int):
         error['user_id'] = 'user_id should be an integar'
     if not isinstance(status, str):
