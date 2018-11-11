@@ -43,12 +43,10 @@ def get_all_parcel():
 
 @parcel_blueprint.route('/api/v1/parcel/<int:parcel_id>', methods=['GET'])
 def get_single_parcel(parcel_id):
-    single = []
     for order in Parcel.parcel_orders:
         if order['parcel_id'] == parcel_id:
-            single.append(order)
-            return jsonify(single), 200
-        return jsonify({"message": "there is no such id"}), 400
+            return jsonify({"message": "your request is successfull", "data": order}), 200
+    return jsonify({"message": "there is no such id"}), 400
 
 
 @parcel_blueprint.route('/api/v1/parcel/<int:parcel_id>/cancel', methods=['PUT'])
@@ -69,7 +67,7 @@ def get_parcel_by_user_id(user_id):
 
     if len(single) > 0:
         return jsonify(single), 200
-    return jsonify({"message": "there is no such id"}), 400
+    return jsonify({"message": "there is no such user"}), 400
 
 
 @parcel_blueprint.errorhandler(InvalidUsage)

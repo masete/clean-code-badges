@@ -72,9 +72,31 @@ class TestEndpoints(unittest.TestCase):
                           parcel_description="apples", user_id=-1, status="pending")
         response = self.app.post('/api/v1/parcel', json=post_order)
         assert "error" in str(response.data)
-        #assert response.status_code == 400
+        assert response.status_code == 400
         assert response.headers["Content-Type"] == "application/json"
         assert "user_id cant be less than 0" in json.loads(response.data)['error']['user_id']
+
+    def test_get_all_parcels(self):
+        post_order = dict(parcel_location="jinja", parcel_destination="manafwa", parcel_weight=24.7,
+                          parcel_description="apples", user_id=1, status="pending")
+        post_order2 = dict(parcel_location="kisumu", parcel_destination="mbale", parcel_weight=78,
+                           parcel_description="eggs", user_id=2, status="cancelled")
+        response = self.app.post('/api/v1/parcel', json=post_order)
+        response2 = self.app.post('/api/v1/parcel', json=post_order2)
+        response3 = self.app.get('/api/v1/parcel')
+        assert response3.status_code == 200
+        assert response3.headers["Content-Type"] == "application/json"
+        assert "jinja" and "kisumu" in str(response3.data)
+
+    def test_get_parcel_by_id(self):
+        response = self.app.post('/api/v1/parcel')
+        response1 = self.app.get('/api/v1/parcel/1')
+        response2 = self.app.get('api/v1/parcel/w')
+        assert response1.status_code == 200
+        assert response2.status_code == 404
+        assert response1.headers["Content-Type"] == "application/json"
+
+
 
 
 
