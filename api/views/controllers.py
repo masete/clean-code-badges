@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request
-from api.models.models import Parcel, parcel_orders
+from api.models.models import Parcel
 from api.validations import empty_order_fields, invalid_input_types, empty_strings_add_weight
 from api.Handlers.error_handlers import InvalidUsage
 
@@ -11,7 +11,7 @@ def create_parcel():
     if request.content_type != "application/json":
         raise InvalidUsage("Invalid content type", 400)
     data = request.get_json()
-    parcel_id = len(parcel_orders) + 1
+    parcel_id = len(Parcel.parcel_orders) + 1
     parcel_location = data.get('parcel_location')
     parcel_destination = data.get('parcel_destination')
     parcel_weight = data.get('parcel_weight')
@@ -19,32 +19,32 @@ def create_parcel():
     user_id = data.get('user_id')
     status = data.get('status')
 
-    val = empty_order_fields(parcel_location, parcel_destination, parcel_weight, parcel_description, status)
+    val = empty_order_fields(parcel_location, parcel_destination, parcel_weight, parcel_description, user_id, status)
     if val:
         raise InvalidUsage(val, 400)
-    input_type = invalid_input_types(parcel_location, parcel_destination, parcel_weight, parcel_description, status)
+    input_type = invalid_input_types(parcel_location, parcel_destination, parcel_weight, parcel_description, user_id, status)
     if input_type:
         raise InvalidUsage(input_type, 400)
-    empty_strings = empty_strings_add_weight(parcel_location, parcel_destination, parcel_weight, parcel_description, status)
+    empty_strings = empty_strings_add_weight(parcel_location, parcel_destination, parcel_weight, parcel_description, user_id, status)
     if empty_strings:
         raise InvalidUsage(empty_strings, 400)
 
     order = Parcel(parcel_id, parcel_location, parcel_destination, parcel_weight, parcel_description, user_id, status)
-    parcel_orders.append(order.to_dict())
+    Parcel.parcel_orders.append(order.to_dict())
     return jsonify({"message": "parcel successfully added", "data": order.to_dict()}), 201
 
 
 @parcel_blueprint.route('/api/v1/parcel', methods=['GET'])
 def get_all_parcel():
-    if not parcel_orders:
+    if not Parcel.parcel_orders:
         return jsonify({"message": "List is empty first post"})
-    return jsonify({"orders": parcel_orders})
+    return jsonify({"orders": Parcel.parcel_orders})
 
 
 @parcel_blueprint.route('/api/v1/parcel/<int:parcel_id>', methods=['GET'])
 def get_single_parcel(parcel_id):
     single = []
-    for order in parcel_orders:
+    for order in Parcel.parcel_orders:
         if order['parcel_id'] == parcel_id:
             single.append(order)
             return jsonify(single), 200
@@ -53,7 +53,7 @@ def get_single_parcel(parcel_id):
 
 @parcel_blueprint.route('/api/v1/parcel/<int:parcel_id>/cancel', methods=['PUT'])
 def cancel_parcel(parcel_id):
-    for order in parcel_orders:
+    for order in Parcel.parcel_orders:
         if order['parcel_id'] == parcel_id:
             order['status'] = 'cancelled'
             return jsonify(order), 200
@@ -63,7 +63,7 @@ def cancel_parcel(parcel_id):
 @parcel_blueprint.route('/api/v1/users/<int:user_id>/parcel', methods=['GET'])
 def get_parcel_by_user_id(user_id):
     single = []
-    for order in parcel_orders:
+    for order in Parcel.parcel_orders:
         if order['user_id'] == user_id:
             single.append(order)
 

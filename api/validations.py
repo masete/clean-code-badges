@@ -1,5 +1,5 @@
 
-def empty_order_fields(parcel_location, parcel_destination, parcel_weight, parcel_description, status):
+def empty_order_fields(parcel_location, parcel_destination, parcel_weight, parcel_description, user_id, status):
     error = {}
     if not parcel_location:
         error['parcel_location'] = 'parcel location field is missing'
@@ -9,12 +9,14 @@ def empty_order_fields(parcel_location, parcel_destination, parcel_weight, parce
         error['parcel_weight'] = 'parcel weight can not be empty'
     if not parcel_description:
         error['parcel_description'] = 'parcel description field is missing'
+    if not user_id:
+        error['user_id'] = 'user_id field is missing'
     if not status:
         error['status'] = 'parcel status field is missing'
     return error
 
 
-def invalid_input_types(parcel_location, parcel_destination, parcel_weight, parcel_description, status):
+def invalid_input_types(parcel_location, parcel_destination, parcel_weight, parcel_description, user_id, status):
     error = {}
     if not isinstance(parcel_location, str):
         error['parcel_location'] = 'should be a string'
@@ -24,12 +26,14 @@ def invalid_input_types(parcel_location, parcel_destination, parcel_weight, parc
         error['parcel_weight'] = 'should be an integar'
     if not isinstance(parcel_description, str):
         error['parcel_location'] = 'should be a string'
+    if not isinstance(user_id, int):
+        error['user_id'] = 'user_id should be an integar'
     if not isinstance(status, str):
         error['status'] = 'status should be a string'
     return error
 
 
-def empty_strings_add_weight(parcel_location, parcel_destination,parcel_weight, parcel_description, status):
+def empty_strings_add_weight(parcel_location, parcel_destination, parcel_weight, parcel_description, user_id, status):
     error = {}
     if parcel_location == " ":
         error['parcel_location'] = 'parcel location can not be parced empty string'
@@ -41,4 +45,6 @@ def empty_strings_add_weight(parcel_location, parcel_destination,parcel_weight, 
         error['status'] = 'parcel status can not be parcel empty string'
     if parcel_weight < 0:
         error['parcel_weight'] = 'weight cant be less than 0'
+    if user_id < 0:
+        error['user_id'] = 'user_id cant be less than 0'
     return error

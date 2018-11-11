@@ -1,10 +1,7 @@
 
-
-parcel_orders = []
-users = []
-
-
 class Parcel:
+    parcel_orders = []
+
     def __init__(self, parcel_id, parcel_location, parcel_destination, parcel_weight, parcel_description, user_id,status):
         self.parcel_id = parcel_id
         self.parcel_location = parcel_location
@@ -22,7 +19,7 @@ class Parcel:
             'parcel_destination': self.parcel_destination,
             'parcel_weight': self.parcel_weight,
             'parcel_description': self.parcel_description,
-            'user_id':self.user_id,
+            'user_id': self.user_id,
             'status': self.status
         }
         return parcel
