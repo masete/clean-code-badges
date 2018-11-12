@@ -30,8 +30,8 @@ def create_parcel():
         raise InvalidUsage(empty_strings, 400)
 
     order = Parcel(parcel_id, parcel_location, parcel_destination, parcel_weight, parcel_description, user_id, status)
-    Parcel.parcel_orders.append(order.to_dict())
-    return jsonify({"message": "parcel successfully added", "data": order.to_dict()}), 201
+    Parcel.parcel_orders.append(order.to_dict() )
+    return jsonify({"message": "parcel successfully added ", "data": order.to_dict()}), 201
 
 
 @parcel_blueprint.route('/api/v1/parcel', methods=['GET'], strict_slashes=False)
