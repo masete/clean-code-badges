@@ -9,7 +9,7 @@ parcel_blueprint = Blueprint("parcel", __name__)
 @parcel_blueprint.route('/api/v1/parcel', methods=['POST'], strict_slashes=False)
 def create_parcel():
     if request.content_type != "application/json":
-        raise InvalidUsage("Invalid content type.......", 400)
+        raise InvalidUsage("Invalid content type.....gkjljlkjlkj.", 400)
     data = request.get_json()
     parcel_id = len(Parcel.parcel_orders) + 1
     parcel_location = data.get('parcel_location')
