@@ -34,14 +34,14 @@ def create_parcel():
     return jsonify({"message": "parcel successfully added", "data": order.to_dict()}), 201
 
 
-@parcel_blueprint.route('/api/v1/parcel', methods=['GET'])
+@parcel_blueprint.route('/api/v1/parcel', methods=['GET'], strict_slashes=False)
 def get_all_parcel():
     if not Parcel.parcel_orders:
         return jsonify({"message": "List is empty first post"})
     return jsonify({"orders": Parcel.parcel_orders})
 
 
-@parcel_blueprint.route('/api/v1/parcel/<int:parcel_id>', methods=['GET'])
+@parcel_blueprint.route('/api/v1/parcel/<int:parcel_id>', methods=['GET'], strict_slashes=False)
 def get_single_parcel(parcel_id):
     for order in Parcel.parcel_orders:
         if order['parcel_id'] == parcel_id:
@@ -49,7 +49,7 @@ def get_single_parcel(parcel_id):
     return jsonify({"message": "there is no such id"}), 400
 
 
-@parcel_blueprint.route('/api/v1/parcel/<int:parcel_id>/cancel', methods=['PUT'])
+@parcel_blueprint.route('/api/v1/parcel/<int:parcel_id>/cancel', methods=['PUT'], strict_slashes=False)
 def cancel_parcel(parcel_id):
     for order in Parcel.parcel_orders:
         if order['parcel_id'] == parcel_id:
@@ -58,7 +58,7 @@ def cancel_parcel(parcel_id):
     return jsonify({"message": "there is no such id"}), 400
 
 
-@parcel_blueprint.route('/api/v1/users/<int:user_id>/parcel', methods=['GET'])
+@parcel_blueprint.route('/api/v1/users/<int:user_id>/parcel', methods=['GET'], strict_slashes=False)
 def get_parcel_by_user_id(user_id):
     single = []
     for order in Parcel.parcel_orders:
